@@ -8,14 +8,9 @@ using MauiApp1.P2P;
 
 namespace MauiApp1;
 
-// Объект HASH
-
-// Устройство 
-
 public partial class P2pView : ContentView
 {
-    private P2PService _p2pService;
-    private bool IsP2PEnabled { get; set; } = true;
+    private Peer Peer { get; }
     private bool IsActive { get; set; }
 
     public event Action<SpaceObject>? SpaceObjectReceived;
@@ -24,9 +19,9 @@ public partial class P2pView : ContentView
     {
         InitializeComponent();
 
-        _p2pService = new P2PService();
-        _p2pService.ThreatReceived += OnThreatReceived;
-        _p2pService.LogMessage += OnP2PLogMessage;
+        Peer = new Peer();
+        Peer.SpaceObjectReceived += OnSpaceObjectReceived;
+        Peer.LogMessage += OnLogMessage;
 
         Start();
     }
@@ -37,7 +32,7 @@ public partial class P2pView : ContentView
 
         try
         {
-            _p2pService.Start();
+            Peer.Start();
             Update(true);
             Console.WriteLine("P2P служба запущена автоматически");
         }
@@ -53,43 +48,43 @@ public partial class P2pView : ContentView
         MainThread.BeginInvokeOnMainThread(() => p2pStatusIcon.Text = isActive ? "🟢" : "🔴");
     }
 
-    private void OnThreatReceived(SpaceObject threat)
+    private void OnSpaceObjectReceived(SpaceObject threat)
     {
         MainThread.BeginInvokeOnMainThread(() => SpaceObjectReceived?.Invoke(threat));
     }
 
-    private void OnP2PLogMessage(string message)
+    private void OnLogMessage(string message)
     {
         MainThread.BeginInvokeOnMainThread(() => Console.WriteLine($"P2P: {message}"));
     }
 
     private void IconTapped(object sender, TappedEventArgs e)
     {
-        IsP2PEnabled = !IsP2PEnabled;
+        IsActive = !IsActive;
 
-        if (IsP2PEnabled)
-            _p2pService.Start();
+        if (IsActive)
+            Peer.Start();
         else
-            _p2pService.Stop();
+            Peer.Stop();
 
-        Update(IsP2PEnabled);
+        Update(IsActive);
     }
 
     public void AddRandomObject()
     {
         var newObject = ObjectGenerator.GenerateRandomObject();
-        OnThreatReceived(newObject);
+        OnSpaceObjectReceived(newObject);
 
-        if (newObject.IsThreat) _ = _p2pService.ShareThreat(newObject);
+        if (newObject.IsThreat) _ = Peer.ShareThreat(newObject);
     }
 
-    private void StopP2P()
+    private void Stop()
     {
         if (!IsActive) return;
 
         try
         {
-            _p2pService.Stop();
+            Peer.Stop();
             IsActive = false;
 
             Update(false);

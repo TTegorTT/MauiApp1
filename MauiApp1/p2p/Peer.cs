@@ -7,14 +7,14 @@ using MauiApp1.Model;
 
 namespace MauiApp1.P2P;
 
-public class P2PService
+public class Peer
 {
     private UdpClient Client { get; set; }
     private string Id { get; }
     private const int DiscoveryPort = 12345;
     private bool IsRunning { get; set; }
 
-    public event Action<SpaceObject>? ThreatReceived;
+    public event Action<SpaceObject>? SpaceObjectReceived;
     public event Action<string>? LogMessage;
 
     private readonly JsonSerializerOptions _jsonOptions = new()
@@ -23,7 +23,7 @@ public class P2PService
         WriteIndented = false
     };
 
-    public P2PService()
+    public Peer()
     {
         Id = GeneratePeerId();
 
@@ -56,7 +56,6 @@ public class P2PService
     {
         IsRunning = false;
         ListenThread?.Wait();
-        Client.Close();
 
         LogMessage?.Invoke("P2P служба остановлена");
     }
@@ -147,7 +146,7 @@ public class P2PService
             LogMessage?.Invoke(
                 $"Получена угроза от {threatData.SourcePeer} (hops: {threatData.Hops}, TTL: {threatData.TTL})");
 
-            ThreatReceived?.Invoke(threatData.Threat);
+            SpaceObjectReceived?.Invoke(threatData.Threat);
 
             if (threatData.TTL > 0) await ShareThreat(threatData.Threat);
         }
