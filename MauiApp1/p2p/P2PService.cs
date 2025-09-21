@@ -10,7 +10,6 @@ public class P2PService
 {
     private UdpClient Client { get; set; }
     private string Id { get; }
-    private List<PeerInfo> knownPeers { get; } = [];
     private const int DiscoveryPort = 12345;
     private bool IsRunning { get; set; }
 
@@ -42,7 +41,6 @@ public class P2PService
             IsRunning = true;
 
             _ = Task.Run(ListenForMessages);
-            _ = Task.Run(SendDiscoveryBeacons);
 
             LogMessage?.Invoke("P2P служба запущена");
         }
@@ -83,52 +81,6 @@ public class P2PService
         }
     }
 
-    private async Task SendDiscoveryBeacons()
-    {
-        while (IsRunning)
-        {
-            try
-            {
-                var discoveryData = new DiscoveryData
-                {
-                    DeviceName = DeviceInfo.Name,
-                    AppVersion = AppInfo.VersionString,
-                    Capabilities = new List<string>
-                    {
-                        "threat_sharing"
-                    }
-                };
-
-                var message = new PeerMessage
-                {
-                    Type = "discovery",
-                    PeerId = Id,
-                    Timestamp = DateTime.Now,
-                    Data = discoveryData
-                };
-
-                var messageJson = JsonSerializer.Serialize(message, _jsonOptions);
-                var bytes = Encoding.UTF8.GetBytes(messageJson);
-
-                // Broadcast discovery message
-                var broadcastEndPoint = new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
-                await Client.SendAsync(bytes, bytes.Length, broadcastEndPoint);
-
-                // Также отправляем на локальный адрес для тестирования
-                var localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.255"), DiscoveryPort);
-                await Client.SendAsync(bytes, bytes.Length, localEndPoint);
-
-                LogMessage?.Invoke("Отправлен discovery beacon");
-
-                await Task.Delay(3000); // Send every 3 seconds
-            }
-            catch (Exception ex)
-            {
-                LogMessage?.Invoke($"Ошибка отправки: {ex.Message}");
-            }
-        }
-    }
-
     public async Task ShareThreat(SpaceObject threat)
     {
         try
@@ -154,19 +106,6 @@ public class P2PService
 
             LogMessage?.Invoke($"Отправка угрозы: {threat.Coordinates}");
 
-            // Send to all known peers
-            foreach (var peer in knownPeers)
-                try
-                {
-                    var endPoint = ParseEndPoint(peer.Endpoint);
-                    await Client.SendAsync(bytes, bytes.Length, endPoint);
-                    LogMessage?.Invoke($"Угроза отправлена пиру: {peer.DeviceName}");
-                }
-                catch (Exception ex)
-                {
-                    LogMessage?.Invoke($"Ошибка отправки пиру {peer.DeviceName}: {ex.Message}");
-                }
-
             // Также broadcast для обнаружения новых пиров
             var broadcastEndPoint = new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
             await Client.SendAsync(bytes, bytes.Length, broadcastEndPoint);
@@ -183,56 +122,14 @@ public class P2PService
         {
             switch (message.Type)
             {
-                case "discovery":
-                    ProcessDiscoveryMessage(message, remoteEndPoint);
-                    break;
                 case "threat":
                     ProcessThreatMessage(message);
-                    break;
-                case "ack":
-                    ProcessAckMessage(message);
                     break;
             }
         }
         catch (Exception ex)
         {
             LogMessage?.Invoke($"Ошибка обработки сообщения: {ex.Message}");
-        }
-    }
-
-    private void ProcessDiscoveryMessage(PeerMessage message, IPEndPoint remoteEndPoint)
-    {
-        if (message.PeerId == Id) return;
-
-        try
-        {
-            var discoveryData = JsonSerializer.Deserialize<DiscoveryData>(message.Data.ToString(), _jsonOptions);
-            var peerEndpoint = $"{remoteEndPoint.Address}:{remoteEndPoint.Port}";
-
-            var existingPeer = knownPeers.FirstOrDefault(p => p.Id == message.PeerId);
-            if (existingPeer == null)
-            {
-                var newPeer = new PeerInfo
-                {
-                    Id = message.PeerId,
-                    DeviceName = discoveryData.DeviceName,
-                    LastSeen = DateTime.Now,
-                    Endpoint = peerEndpoint
-                };
-
-                knownPeers.Add(newPeer);
-                // PeerDiscovered?.Invoke(newPeer);
-                LogMessage?.Invoke($"Обнаружен пир: {discoveryData.DeviceName}");
-            }
-            else
-            {
-                existingPeer.LastSeen = DateTime.Now;
-                existingPeer.Endpoint = peerEndpoint;
-            }
-        }
-        catch (Exception ex)
-        {
-            LogMessage?.Invoke($"Ошибка обработки discovery: {ex.Message}");
         }
     }
 
@@ -268,11 +165,6 @@ public class P2PService
         }
     }
 
-    private void ProcessAckMessage(PeerMessage message)
-    {
-        // Handle acknowledgements if needed
-    }
-
     private string GeneratePeerId()
     {
         return $"{DeviceInfo.Name}_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
@@ -290,17 +182,8 @@ public class P2PService
         }
         catch
         {
-            // В случае ошибки используем broadcast
         }
 
         return new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
-    }
-
-    // public List<PeerInfo> GetKnownPeers()
-    // => knownPeers;
-
-    public void CleanupOldPeers()
-    {
-        knownPeers.RemoveAll(p => (DateTime.Now - p.LastSeen).TotalMinutes > 5);
     }
 }

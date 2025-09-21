@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace MauiApp1.Model;
 
 public class SpaceObject

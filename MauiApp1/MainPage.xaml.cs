@@ -80,7 +80,6 @@ public partial class MainPage : ContentPage
 
     private void P2pView_OnSpaceObjectReceived(SpaceObject obj)
     {
-        // Проверяем, нет ли уже такой угрозы
         if (Objects.Any(o => o.Coordinates == obj.Coordinates &&
                              Math.Abs((o.ArrivalTime - obj.ArrivalTime).TotalSeconds) < 1))
             return;
