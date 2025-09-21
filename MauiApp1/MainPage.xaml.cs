@@ -26,13 +26,13 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         objectsCollectionView.ItemsSource = Objects;
 
-        // _p2pService = new P2PService();
-        // _p2pService.PeerDiscovered += OnPeerDiscovered;
-        // _p2pService.ThreatReceived += OnThreatReceived;
-        // _p2pService.LogMessage += OnP2PLogMessage;
+        _p2pService = new P2PService();
+        _p2pService.PeerDiscovered += OnPeerDiscovered;
+        _p2pService.ThreatReceived += OnThreatReceived;
+        _p2pService.LogMessage += OnP2PLogMessage;
 
-        // Автоматически запускаем P2P
-        // _ = StartP2PService();
+        //Автоматически запускаем P2P
+        _ = StartP2PService();
 
         // Регистрируем конвертеры
         Resources.Add("ThreatToColorConverter", new ThreatToColorConverter());
