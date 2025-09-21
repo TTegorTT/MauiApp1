@@ -18,46 +18,10 @@
                    FontAttributes="Bold"
                    TextColor="Black"
                    Grid.Column="0" />
-
-            <!-- Значок статуса P2P -->
-            <Label x:Name="p2pStatusIcon"
-                   Text="🔴"
-                   Grid.Column="1"
-                   TextColor="Black"
-                   FontSize="20"
-                   VerticalOptions="Center"
-                   HorizontalOptions="End">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnP2PStatusIconTapped" />
-                </Label.GestureRecognizers>
-            </Label>
+            
+            <app:P2pView x:Name="P2p" SpaceObjectReceived="P2pView_OnSpaceObjectReceived"/>
         </Grid>
         <!-- Заголовок -->
-
-        <!-- P2P статус -->
-        <Frame Grid.Row="1"
-               BackgroundColor="#FFFFFF"
-               CornerRadius="8"
-               Padding="8"
-               Margin="0,0,0,5">
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="15">
-                <Label x:Name="p2pStatusLabel"
-                       Text="P2P: Выкл"
-                       TextColor="White"
-                       FontSize="12" />
-                <Label x:Name="peersCountLabel"
-                       Text="Пиров: 0"
-                       TextColor="#4CAF50"
-                       FontSize="12" />
-                <Button x:Name="p2pToggleButton"
-                        Text="Включить P2P"
-                        Clicked="OnP2PToggleClicked"
-                        WidthRequest="100"
-                        HeightRequest="30"
-                        FontSize="10"
-                        BackgroundColor="#4682B4" />
-            </HorizontalStackLayout>
-        </Frame>
 
         <!--Кнопки управления-->
         <HorizontalStackLayout Grid.Row="3"
@@ -86,7 +50,7 @@
                         SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:SpaceObject">
-                    <app:SpaceObjectView />
+                    <app:SpaceObjectView DoubleTapped="SpaceObjectView_OnDoubleTapped"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
