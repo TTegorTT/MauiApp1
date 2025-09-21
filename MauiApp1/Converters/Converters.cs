@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MauiApp1.Model;
 
 namespace MauiApp1.Converters
 {

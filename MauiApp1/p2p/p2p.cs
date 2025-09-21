@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MauiApp1.Model;
 
 namespace MauiApp1.P2P
 {
