@@ -37,7 +37,7 @@ public partial class P2pView : ContentView
 
         try
         {
-            _p2pService.StartService();
+            _p2pService.Start();
             Update(true);
             Console.WriteLine("P2P служба запущена автоматически");
         }
@@ -68,9 +68,9 @@ public partial class P2pView : ContentView
         IsP2PEnabled = !IsP2PEnabled;
 
         if (IsP2PEnabled)
-            _p2pService.StartService();
+            _p2pService.Start();
         else
-            _p2pService.StopService();
+            _p2pService.Stop();
 
         Update(IsP2PEnabled);
     }
@@ -89,7 +89,7 @@ public partial class P2pView : ContentView
 
         try
         {
-            _p2pService.StopService();
+            _p2pService.Stop();
             IsActive = false;
 
             Update(false);

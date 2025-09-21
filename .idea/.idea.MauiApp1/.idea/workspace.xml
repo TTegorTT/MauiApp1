@@ -9,7 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6eea02b-fdc7-43ca-bdc0-d7eae63bfce5" name="Changes" comment="" />
+    <list default="true" id="a6eea02b-fdc7-43ca-bdc0-d7eae63bfce5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MauiApp1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MauiApp1/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,28 +31,28 @@
       <facet id="MauiApp1/invalid/Android Facet - MauiApp1" />
     </ignored-facets>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="3307y3Ey8SMVJhH5OaVbCJ1h6Hc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Device#class com.jetbrains.rider.run.multiPlatform.ios.devices.IOSSimulatorKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider#iOS: MauiApp1": "iPhone 12",
-    "DeviceKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider": "Simulator",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "SpaceObjectDetail",
-    "macOS.MauiApp1.executor": "Run",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Device#class com.jetbrains.rider.run.multiPlatform.ios.devices.IOSSimulatorKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider#iOS: MauiApp1&quot;: &quot;iPhone 12&quot;,
+    &quot;DeviceKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider&quot;: &quot;Simulator&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;d657481e&quot;,
+    &quot;macOS.MauiApp1.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="macOS.MauiApp1">
     <configuration name="MauiApp1" type="XamarinAndroidProject" factoryName="Xamarin.Android">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/MauiApp1/MauiApp1.csproj" />
@@ -87,6 +89,7 @@
       <option name="presentableId" value="Default" />
       <updated>1758442387368</updated>
       <workItem from="1758442388738" duration="4455000" />
+      <workItem from="1758455195025" duration="18000" />
     </task>
     <servers />
   </component>
