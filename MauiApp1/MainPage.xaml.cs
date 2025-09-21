@@ -24,17 +24,6 @@ public partial class MainPage : ContentPage
         Resources.Add("ThreatToStringConverter", new ThreatToStringConverter());
     }
 
-    void a(SpaceObject spaceObject)
-    {
-        // Проверяем, нет ли уже такой угрозы
-        if (Objects.Any(o => o.Coordinates == spaceObject.Coordinates &&
-                             Math.Abs((o.ArrivalTime - spaceObject.ArrivalTime).TotalSeconds) < 1))
-            return;
-        Objects.Add(spaceObject);
-
-        Console.WriteLine($"Получена угроза от P2P: {spaceObject.Coordinates}");
-    }
-
     private async Task ShowObjectDetails(SpaceObject obj)
     {
         var threatEmoji = obj.Threat switch
@@ -91,6 +80,12 @@ public partial class MainPage : ContentPage
 
     private void P2pView_OnSpaceObjectReceived(SpaceObject obj)
     {
+        // Проверяем, нет ли уже такой угрозы
+        if (Objects.Any(o => o.Coordinates == obj.Coordinates &&
+                             Math.Abs((o.ArrivalTime - obj.ArrivalTime).TotalSeconds) < 1))
+            return;
         Objects.Add(obj);
+
+        Console.WriteLine($"Получена угроза от P2P: {obj.Coordinates}");
     }
 }
