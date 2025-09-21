@@ -55,7 +55,7 @@ public class Peer
     public void Stop()
     {
         IsRunning = false;
-        ListenThread?.Wait();
+        if (ListenThread?.Status == TaskStatus.Running) ListenThread?.Wait();
 
         LogMessage?.Invoke("P2P служба остановлена");
     }
