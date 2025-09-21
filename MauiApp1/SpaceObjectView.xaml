@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:MauiApp1.Converters"
              xmlns:model="clr-namespace:MauiApp1.Model"
+             xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
              x:Class="MauiApp1.SpaceObjectView" x:DataType="model:SpaceObject">
 
     <ContentView.Resources>
@@ -13,23 +14,26 @@
     </ContentView.Resources>
 
     <ContentView.Content>
-        <Frame Padding="10"
-               Margin="0,4"
-               CornerRadius="8"
-               BackgroundColor="White">
+        <Border
+            Padding="16, 12, 12, 12"
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 8"
+            BackgroundColor="White"
+            Opacity="0.6"
+            Margin="0, 8">
 
-            <Frame.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnObjectDoubleTapped"
-                                      NumberOfTapsRequired="2" />
-            </Frame.GestureRecognizers>
-
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer
+                    Tapped="OnObjectDoubleTapped"
+                    NumberOfTapsRequired="2" />
+            </Border.GestureRecognizers>
 
             <VerticalStackLayout Spacing="3" Grid.Column="0">
                 <!-- Заголовок с типом и угрозой -->
                 <Grid ColumnDefinitions="*, auto">
                     <HorizontalStackLayout>
                         <Label Text="{Binding Type, Converter={StaticResource TypeToStringConverter}}"
-                               FontSize="13"
+                               FontSize="20"
                                TextColor="Black"
                                FontAttributes="Bold"
                                VerticalOptions="Center"
@@ -44,33 +48,31 @@
 
                         <BoxView Color="Transparent" HorizontalOptions="FillAndExpand" />
                     </HorizontalStackLayout>
-                    <Button
+
+                    <Ellipse
+                        WidthRequest="32"
+                        HeightRequest="32"
                         BackgroundColor="{Binding Threat, Converter={StaticResource ThreatToColorConverter}}"
-                        CornerRadius="30"
-                        MaximumWidthRequest="30"
-                        MaximumHeightRequest="30"
                         Grid.Column="1" />
                 </Grid>
-
-
+                
+                <BoxView Color="White" WidthRequest="12" />
+                
                 <!-- Основная информация -->
                 <Label Text="{Binding ArrivalTimeFormatted, StringFormat='{HH:mm}'}"
-                       FontSize="15"
+                       FontSize="24"
                        TextColor="Black" />
                 <Label Text="{Binding ArrivalDate, StringFormat='{dd.MM.yyyy}'}"
-                       FontSize="11"
+                       FontSize="14"
+                       Opacity="0.5"
                        TextColor="Black" />
 
                 <Label Text="{Binding Coordinates, StringFormat='{0}'}"
-                       FontSize="11"
+                       FontSize="14"
                        TextColor="Black"
+                       Opacity="0.5"
                        LineBreakMode="TailTruncation" />
-
-                <Label Text="Двойное нажатие для деталей"
-                       FontSize="9"
-                       TextColor="LightGray"
-                       FontAttributes="Italic" />
             </VerticalStackLayout>
-        </Frame>
+        </Border>
     </ContentView.Content>
 </ContentView>
