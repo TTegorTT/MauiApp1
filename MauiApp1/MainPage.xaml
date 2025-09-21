@@ -34,13 +34,6 @@
                     HeightRequest="45"
                     BackgroundColor="#20B2AA"
                     FontSize="12" />
-            <Button x:Name="autoAddButton"
-                    Text="Авто"
-                    Clicked="OnAutoAddClicked"
-                    WidthRequest="80"
-                    HeightRequest="45"
-                    BackgroundColor="#4682B4"
-                    FontSize="12" />
         </HorizontalStackLayout>
 
         <!-- Список объектов -->
