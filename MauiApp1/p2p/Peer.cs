@@ -40,7 +40,7 @@ public class Peer
         {
             IsRunning = true;
 
-            ListenThread = Task.Run(ListenForMessages);
+            ListenThread = ListenForMessages();
 
             LogMessage?.Invoke("P2P служба запущена");
         }
