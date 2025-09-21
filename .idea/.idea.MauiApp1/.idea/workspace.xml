@@ -21,6 +21,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/MauiApp1/obj/Debug/net9.0-ios/iossimulator-arm64/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
       <facet id="MauiApp1/invalid/Android Facet - MauiApp1" />
@@ -83,7 +86,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1758442387368</updated>
-      <workItem from="1758442388738" duration="2173000" />
+      <workItem from="1758442388738" duration="4455000" />
     </task>
     <servers />
   </component>

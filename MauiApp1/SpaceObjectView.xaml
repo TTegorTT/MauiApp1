@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:MauiApp1.Converters"
+             xmlns:model="clr-namespace:MauiApp1.Model"
+             x:Class="MauiApp1.SpaceObjectView" x:DataType="model:SpaceObject">
+
+    <ContentView.Resources>
+        <converters:TypeToStringConverter x:Key="TypeToStringConverter" />
+        <converters:ThreatToStringConverter x:Key="ThreatToStringConverter" />
+        <converters:ThreatToColorConverter x:Key="ThreatToColorConverter" />
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <Frame Padding="10"
+               Margin="0,4"
+               CornerRadius="8"
+               BackgroundColor="White">
+
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnObjectDoubleTapped"
+                                      NumberOfTapsRequired="2" />
+            </Frame.GestureRecognizers>
+
+
+            <VerticalStackLayout Spacing="3" Grid.Column="0">
+                <!-- Заголовок с типом и угрозой -->
+                <Grid ColumnDefinitions="*, auto">
+                    <HorizontalStackLayout>
+                        <Label Text="{Binding Type, Converter={StaticResource TypeToStringConverter}}"
+                               FontSize="13"
+                               TextColor="Black"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               LineBreakMode="TailTruncation" />
+                        <BoxView Color="White" WidthRequest="5" />
+                        <Label Text="_" FontSize="13" TextColor="Black" />
+                        <BoxView Color="White" WidthRequest="5" />
+                        <Label Text="{Binding Threat, Converter={StaticResource ThreatToStringConverter}}"
+                               FontSize="13"
+                               TextColor="Black"
+                               VerticalOptions="Center" />
+
+                        <BoxView Color="Transparent" HorizontalOptions="FillAndExpand" />
+                    </HorizontalStackLayout>
+                    <Button
+                        BackgroundColor="{Binding Threat, Converter={StaticResource ThreatToColorConverter}}"
+                        CornerRadius="30"
+                        MaximumWidthRequest="30"
+                        MaximumHeightRequest="30"
+                        Grid.Column="1" />
+                </Grid>
+
+
+                <!-- Основная информация -->
+                <Label Text="{Binding ArrivalTimeFormatted, StringFormat='{HH:mm}'}"
+                       FontSize="15"
+                       TextColor="Black" />
+                <Label Text="{Binding ArrivalDate, StringFormat='{dd.MM.yyyy}'}"
+                       FontSize="11"
+                       TextColor="Black" />
+
+                <Label Text="{Binding Coordinates, StringFormat='{0}'}"
+                       FontSize="11"
+                       TextColor="Black"
+                       LineBreakMode="TailTruncation" />
+
+                <Label Text="Двойное нажатие для деталей"
+                       FontSize="9"
+                       TextColor="LightGray"
+                       FontAttributes="Italic" />
+            </VerticalStackLayout>
+        </Frame>
+    </ContentView.Content>
+</ContentView>

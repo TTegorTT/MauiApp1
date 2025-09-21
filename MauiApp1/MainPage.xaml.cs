@@ -16,6 +16,7 @@ public partial class MainPage : ContentPage
     private const int P2PWorkDurationMinutes = 1; // Длительность работы P2P в минутах
     private System.Timers.Timer _p2pControlTimer;
     public ObservableCollection<SpaceObject> Objects { get; set; } = new ObservableCollection<SpaceObject>();
+
     private System.Timers.Timer autoAddTimer;
     private bool isAutoAddEnabled = false;
     private int threatCount = 0;
@@ -25,13 +26,13 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         objectsCollectionView.ItemsSource = Objects;
 
-        _p2pService = new P2PService();
-        _p2pService.PeerDiscovered += OnPeerDiscovered;
-        _p2pService.ThreatReceived += OnThreatReceived;
-        _p2pService.LogMessage += OnP2PLogMessage;
+        // _p2pService = new P2PService();
+        // _p2pService.PeerDiscovered += OnPeerDiscovered;
+        // _p2pService.ThreatReceived += OnThreatReceived;
+        // _p2pService.LogMessage += OnP2PLogMessage;
 
         // Автоматически запускаем P2P
-        _ = StartP2PService();
+        // _ = StartP2PService();
 
         // Регистрируем конвертеры
         Resources.Add("ThreatToColorConverter", new ThreatToColorConverter());

@@ -1,157 +1,94 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters="clr-namespace:MauiApp1.Converters"
+             xmlns:app="clr-namespace:MauiApp1"
+             xmlns:model="clr-namespace:MauiApp1.Model"
              x:Class="MauiApp1.MainPage"
-             Background="#CBE0E3">
+             Background="#CBE0E3" x:DataType="app:MainPage">
 
-    <ContentPage.Resources>
-        <converters:DistanceConverter x:Key="DistanceConverter"/>
-        <converters:SpeedConverter x:Key="SpeedConverter"/>
-    </ContentPage.Resources>
-    
     <Grid RowDefinitions="Auto,0,Auto,Auto,*"
           Margin="10, 10, 10, 10"
           RowSpacing="2">
 
         <Grid ColumnDefinitions="*, auto" Margin="0, 10, 0, 0">
             <Label Grid.Row="0"
-           Text="Угрозы" 
-           FontSize="18" 
-           FontAttributes="Bold" 
-           TextColor="Black"
-           Grid.Column="0"/>
+                   Text="Угрозы"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="Black"
+                   Grid.Column="0" />
 
             <!-- Значок статуса P2P -->
             <Label x:Name="p2pStatusIcon"
-                    Text="🔴"
-                    Grid.Column="1"
-                    TextColor="Black"
-                    FontSize="20"
-                    VerticalOptions="Center"
-                    HorizontalOptions="End">
+                   Text="🔴"
+                   Grid.Column="1"
+                   TextColor="Black"
+                   FontSize="20"
+                   VerticalOptions="Center"
+                   HorizontalOptions="End">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnP2PStatusIconTapped"/>
+                    <TapGestureRecognizer Tapped="OnP2PStatusIconTapped" />
                 </Label.GestureRecognizers>
             </Label>
         </Grid>
         <!-- Заголовок -->
-        
 
         <!-- P2P статус -->
         <Frame Grid.Row="1"
-               BackgroundColor="#FFFFFF" 
-               CornerRadius="8" 
+               BackgroundColor="#FFFFFF"
+               CornerRadius="8"
                Padding="8"
                Margin="0,0,0,5">
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="15">
-                <Label x:Name="p2pStatusLabel" 
-                       Text="P2P: Выкл" 
+                <Label x:Name="p2pStatusLabel"
+                       Text="P2P: Выкл"
                        TextColor="White"
-                       FontSize="12"/>
-                <Label x:Name="peersCountLabel" 
-                       Text="Пиров: 0" 
+                       FontSize="12" />
+                <Label x:Name="peersCountLabel"
+                       Text="Пиров: 0"
                        TextColor="#4CAF50"
-                       FontSize="12"/>
+                       FontSize="12" />
                 <Button x:Name="p2pToggleButton"
                         Text="Включить P2P"
                         Clicked="OnP2PToggleClicked"
                         WidthRequest="100"
                         HeightRequest="30"
                         FontSize="10"
-                        BackgroundColor="#4682B4"/>
+                        BackgroundColor="#4682B4" />
             </HorizontalStackLayout>
         </Frame>
 
-         <!--Кнопки управления--> 
+        <!--Кнопки управления-->
         <HorizontalStackLayout Grid.Row="3"
-                               HorizontalOptions="Center" 
+                               HorizontalOptions="Center"
                                Spacing="8"
                                Margin="0,0,0,8">
-            <Button Text="Добавить" 
+            <Button Text="Добавить"
                     Clicked="OnAddObjectClicked"
                     WidthRequest="120"
                     HeightRequest="45"
                     BackgroundColor="#20B2AA"
-                    FontSize="12"/>
-            <Button x:Name="autoAddButton" 
-                    Text="Авто" 
+                    FontSize="12" />
+            <Button x:Name="autoAddButton"
+                    Text="Авто"
                     Clicked="OnAutoAddClicked"
                     WidthRequest="80"
                     HeightRequest="45"
                     BackgroundColor="#4682B4"
-                    FontSize="12"/>
+                    FontSize="12" />
         </HorizontalStackLayout>
 
         <!-- Список объектов -->
         <!--BackgroundColor="{Binding Threat, Converter={StaticResource ThreatToColorConverter}}">-->
         <CollectionView Grid.Row="4"
-                x:Name="objectsCollectionView"
-                SelectionMode="None">
+                        x:Name="objectsCollectionView"
+                        SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="10" 
-                   Margin="0,4"
-                   CornerRadius="8"
-                   BackgroundColor="White">
-
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnObjectDoubleTapped" 
-                                        NumberOfTapsRequired="2"/>
-                        </Frame.GestureRecognizers>
-
-                        
-                        <VerticalStackLayout Spacing="3" Grid.Column="0">
-                            <!-- Заголовок с типом и угрозой -->
-                            <Grid ColumnDefinitions="*, auto">
-                                <HorizontalStackLayout>
-                                    <Label Text="{Binding Type, Converter={StaticResource TypeToStringConverter}}" 
-                                        FontSize="13" 
-                                        TextColor="Black"
-                                        FontAttributes="Bold"
-                                        VerticalOptions="Center"
-                                        LineBreakMode="TailTruncation"/>
-                                    <BoxView Color="White" WidthRequest="5"/>
-                                    <Label Text="_" FontSize="13" TextColor="Black"/>
-                                    <BoxView Color="White" WidthRequest="5"/>
-                                    <Label Text="{Binding Threat, Converter={StaticResource ThreatToStringConverter}}" 
-                                        FontSize="13" 
-                                        TextColor="Black"
-                                          VerticalOptions="Center"/>
-
-                                    <BoxView Color="Transparent" HorizontalOptions="FillAndExpand"/>
-                                </HorizontalStackLayout>
-                                <Button 
-                                    BackgroundColor="{Binding Threat, Converter={StaticResource ThreatToColorConverter}}" 
-                                    CornerRadius="30" 
-                                    MaximumWidthRequest="30" 
-                                    MaximumHeightRequest="30"
-                                    Grid.Column="1"/>
-                            </Grid>
-                            
-
-                            <!-- Основная информация -->
-                            <Label Text="{Binding ArrivalTimeFormatted, StringFormat='{HH:mm}'}" 
-                                FontSize="15" 
-                                TextColor="Black"/>
-                            <Label Text="{Binding ArrivalDate, StringFormat='{dd.MM.yyyy}'}" 
-                           FontSize="11" 
-                           TextColor="Black"/>
-
-                            <Label Text="{Binding Coordinates, StringFormat='{0}'}" 
-                           FontSize="11" 
-                           TextColor="Black"
-                           LineBreakMode="TailTruncation"/>
-
-                            <Label Text="Двойное нажатие для деталей" 
-                           FontSize="9" 
-                           TextColor="LightGray"
-                           FontAttributes="Italic"/>
-                        </VerticalStackLayout>
-                    </Frame>
+                <DataTemplate x:DataType="model:SpaceObject">
+                    <app:SpaceObjectView />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-            </CollectionView>
-
+        </CollectionView>
     </Grid>
 </ContentPage>
