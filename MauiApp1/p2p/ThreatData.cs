@@ -5,15 +5,8 @@ namespace MauiApp1.P2P;
 
 public class ThreatData
 {
-    [JsonPropertyName("threat")]
-    public SpaceObject Threat { get; set; }
-
-    [JsonPropertyName("sourcePeer")]
-    public string SourcePeer { get; set; }
-
-    [JsonPropertyName("hops")]
-    public int Hops { get; set; } = 1;
-
-    [JsonPropertyName("ttl")]
-    public int TTL { get; set; } = 5; // Time to live
+    public required SpaceObject Threat { get; set; }
+    public required string SourcePeer { get; set; }
+    public required int Hops { get; set; } = 1;
+    public required int TTL { get; set; } = 5;
 }

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -13,7 +14,6 @@ public class P2PService
     private const int DiscoveryPort = 12345;
     private bool IsRunning { get; set; }
 
-    // public event Action<PeerInfo> PeerDiscovered;
     public event Action<SpaceObject>? ThreatReceived;
     public event Action<string>? LogMessage;
 
@@ -32,7 +32,7 @@ public class P2PService
         Client.MulticastLoopback = true;
     }
 
-    public void StartService()
+    public void Start()
     {
         if (IsRunning) return;
 
@@ -40,7 +40,7 @@ public class P2PService
         {
             IsRunning = true;
 
-            _ = Task.Run(ListenForMessages);
+            ListenThread = Task.Run(ListenForMessages);
 
             LogMessage?.Invoke("P2P служба запущена");
         }
@@ -50,10 +50,14 @@ public class P2PService
         }
     }
 
-    public void StopService()
+    private Task? ListenThread { get; set; }
+
+    public void Stop()
     {
         IsRunning = false;
+        ListenThread?.Wait();
         Client.Close();
+
         LogMessage?.Invoke("P2P служба остановлена");
     }
 
@@ -73,7 +77,7 @@ public class P2PService
 
             var message = JsonSerializer.Deserialize<PeerMessage>(messageJson, _jsonOptions);
 
-            if (message != null) ProcessMessage(message, result.RemoteEndPoint);
+            if (message != null) await ProcessMessage(message);
         }
         catch (Exception ex)
         {
@@ -95,9 +99,7 @@ public class P2PService
 
             var message = new PeerMessage
             {
-                Type = "threat",
                 PeerId = Id,
-                Timestamp = DateTime.Now,
                 Data = threatData
             };
 
@@ -106,7 +108,6 @@ public class P2PService
 
             LogMessage?.Invoke($"Отправка угрозы: {threat.Coordinates}");
 
-            // Также broadcast для обнаружения новых пиров
             var broadcastEndPoint = new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
             await Client.SendAsync(bytes, bytes.Length, broadcastEndPoint);
         }
@@ -116,16 +117,11 @@ public class P2PService
         }
     }
 
-    private void ProcessMessage(PeerMessage message, IPEndPoint remoteEndPoint)
+    private async Task ProcessMessage(PeerMessage message)
     {
         try
         {
-            switch (message.Type)
-            {
-                case "threat":
-                    ProcessThreatMessage(message);
-                    break;
-            }
+            await ProcessThreatMessage(message);
         }
         catch (Exception ex)
         {
@@ -133,31 +129,27 @@ public class P2PService
         }
     }
 
-    private void ProcessThreatMessage(PeerMessage message)
+    private async Task ProcessThreatMessage(PeerMessage message)
     {
         try
         {
             var threatDataJson = message.Data.ToString();
-            var threatData = JsonSerializer.Deserialize<ThreatData>(threatDataJson, _jsonOptions);
+            Debug.Assert(threatDataJson is not null);
 
-            // Check TTL and avoid loops
+            var threatData = JsonSerializer.Deserialize<ThreatData>(threatDataJson, _jsonOptions);
+            Debug.Assert(threatData is not null);
+
             if (threatData.TTL <= 0 || threatData.SourcePeer == Id) return;
 
-            // Decrease TTL and increase hops
             threatData.TTL--;
             threatData.Hops++;
 
             LogMessage?.Invoke(
                 $"Получена угроза от {threatData.SourcePeer} (hops: {threatData.Hops}, TTL: {threatData.TTL})");
 
-            // Add to local storage
             ThreatReceived?.Invoke(threatData.Threat);
 
-            // Forward to other peers (if TTL still allows)
-            if (threatData.TTL > 0)
-            {
-                _ = ShareThreat(threatData.Threat);
-            }
+            if (threatData.TTL > 0) await ShareThreat(threatData.Threat);
         }
         catch (Exception ex)
         {
@@ -168,22 +160,5 @@ public class P2PService
     private string GeneratePeerId()
     {
         return $"{DeviceInfo.Name}_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
-    }
-
-    private IPEndPoint ParseEndPoint(string endpoint)
-    {
-        try
-        {
-            var parts = endpoint.Split(':');
-            if (parts.Length == 2 && IPAddress.TryParse(parts[0], out var ipAddress))
-            {
-                return new IPEndPoint(ipAddress, int.Parse(parts[1]));
-            }
-        }
-        catch
-        {
-        }
-
-        return new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
     }
 }
