@@ -33,7 +33,7 @@
                 <Grid ColumnDefinitions="*, auto">
                     <HorizontalStackLayout>
                         <Label Text="{Binding Type, Converter={StaticResource TypeToStringConverter}}"
-                               FontSize="20"
+                               FontSize="16"
                                TextColor="Black"
                                FontAttributes="Bold"
                                VerticalOptions="Center"
@@ -60,15 +60,15 @@
                 
                 <!-- Основная информация -->
                 <Label Text="{Binding ArrivalTimeFormatted, StringFormat='{HH:mm}'}"
-                       FontSize="24"
+                       FontSize="20"
                        TextColor="Black" />
                 <Label Text="{Binding ArrivalDate, StringFormat='{dd.MM.yyyy}'}"
-                       FontSize="14"
+                       FontSize="12"
                        Opacity="0.5"
                        TextColor="Black" />
 
                 <Label Text="{Binding Coordinates, StringFormat='{0}'}"
-                       FontSize="14"
+                       FontSize="12"
                        TextColor="Black"
                        Opacity="0.5"
                        LineBreakMode="TailTruncation" />
