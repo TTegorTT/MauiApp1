@@ -272,9 +272,8 @@ public static class ObjectGenerator
         // Естественные объекты не могут получить больше MediumThreat
         return threatScore switch
         {
-            >= 4 => ThreatLevel.MediumThreat,     // Максимум для естественных
-            >= 2 => ThreatLevel.LowThreat,
-            _ => ThreatLevel.Safe
+            >= 4 => ThreatLevel.MediumThreat,     // Максимум для 
+            _ => ThreatLevel.LowThreat
         };
     }
     private static ThreatLevel CalculateSpaceshipThreatLevel(SpaceObject obj)
@@ -326,8 +325,8 @@ public static class ObjectGenerator
         if (hasArtificialFeatures) score += 2;
         if (hasControlledMovement) score += 1;
 
-        // Увеличиваем шанс до 8% (было 3%)
-        return score >= 3 && random.Next(100) < 8;
+        // 15%
+        return score >= 3 && random.Next(100) < 15;
     }
 
     private static bool HasArtificialFeatures(SpaceObject obj)
