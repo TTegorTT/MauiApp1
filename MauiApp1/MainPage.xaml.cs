@@ -1,15 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Timers;
-using MauiApp1.Converters;
+﻿using MauiApp1.Converters;
 using MauiApp1.Model;
-using MauiApp1.P2P;
 
 namespace MauiApp1;
 
 public partial class MainPage : ContentPage
 {
-    public ObservableCollection<SpaceObject> Objects { get; set; } = new ObservableCollection<SpaceObject>();
+    public SpaceObjectList Objects { get; set; } = [];
 
     public MainPage()
     {
@@ -22,6 +18,18 @@ public partial class MainPage : ContentPage
         Resources.Add("TypeToStringConverter", new TypeToStringConverter());
         Resources.Add("ThreatToEmojiConverter", new ThreatToEmojiConverter());
         Resources.Add("ThreatToStringConverter", new ThreatToStringConverter());
+
+        _ = StartRandomCreating();
+    }
+
+    private async Task StartRandomCreating()
+    {
+        while (true)
+        {
+            await Task.Delay((int)(10000 + 50000 * Random.Shared.NextSingle()));
+
+            P2p.AddRandomObject();
+        }
     }
 
     private async Task ShowObjectDetails(SpaceObject obj)
